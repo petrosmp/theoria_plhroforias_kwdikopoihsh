@@ -15,13 +15,12 @@ function H = binary_source_entropy(p)
     H = -p*log2(p) - (1-p)*log2(1-p);
 end
 
-probabilities = zeros(1, 2^n);
+probabilities = [];
 
-for i = 0:(2^n - 1)
-    probabilities(i+1) = prob_of_block_with_index(i, p, n);
+for i = 0:n
+    probabilities = [probabilities; zeros(nchoosek(n, i), 1) + (p^i) * ((1 - p)^(n - i))];
 end
 
-probabilities = sort(probabilities, 'descend');
 
 % Plot the results
 figure;

@@ -5,7 +5,10 @@ where P(X_i=1)=p for all i. Its output is being processed in blocks of n bits.
 1) Where are typical sequences observed
 """
 import matplotlib.pyplot as plt
-from math import log2
+from math import log2, comb
+import time
+
+start = time.time()
 
 EPSILON = 0.05
 
@@ -27,24 +30,27 @@ def prob_of_block_with_index(p:int, i: int):
     # find probability
     return pow(p, ones)*pow(1-p,n-ones)
 
-probabilities = []
+prob2 = []
 
-for i in range(2**n):
-    probabilities.append(prob_of_block_with_index(p, i))
+for i in range(n+1):
+    prob2.extend([pow(p, i)*pow(1-p, n-i)]*comb(n, i))
 
 def binary_source_entropy(p):
     return -p*log2(p) - (1-p)*log2(1-p) 
 
-probabilities.sort(reverse=True)
 
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
 ax.set_yscale('symlog')
 ax.set_xscale('symlog')
 ax.set_xlim(-0.25*10**4, 3.5*10**4)
-line, = ax.plot(probabilities, color='blue', lw=2)
+line, = ax.plot(prob2, color='blue', lw=2)
 ax.axhline(pow(2, -n*binary_source_entropy(p)))
 ax.axhline(pow(2, -n*(binary_source_entropy(p)-EPSILON)))
 ax.axhline(pow(2, -n*(binary_source_entropy(p)+EPSILON)))
 ax.set_xlim(-0.25*10**4, 3.5*10**4)
+
+end = time.time()
+print(f"time: {end-start} s")
+
 plt.show()

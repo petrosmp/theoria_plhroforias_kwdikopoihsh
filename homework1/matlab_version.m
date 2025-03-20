@@ -1,16 +1,14 @@
 EPSILON = 0.05;
 
-p = 0.45;
+p = 0.1;
 n = 15;
 
-% Function to compute probability of a block corresponding to index i
 function prob = prob_of_block_with_index(i, p, n)
-    binary_repr = dec2bin(i, n) - '0'; % Convert decimal i to binary representation
-    ones_count = sum(binary_repr); % Count ones
+    binary_repr = dec2bin(i, n) - '0';
+    ones_count = sum(binary_repr);
     prob = (p^ones_count) * ((1-p)^(n-ones_count));
 end
 
-% Function to compute binary source entropy
 function H = binary_source_entropy(p)
     H = -p*log2(p) - (1-p)*log2(1-p);
 end
@@ -22,7 +20,6 @@ for i = 0:n
 end
 
 
-% Plot the results
 figure;
 semilogy(probabilities, 'b', DisplayName='probabilities');
 xlim([-0.25e4, 3.5e4]);

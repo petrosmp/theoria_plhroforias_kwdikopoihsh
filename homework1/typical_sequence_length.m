@@ -29,9 +29,9 @@ hold on;
 ax=gca;
 set(ax, 'YScale', 'log');
 
-semilogy(n_values, A_ns, 'b', DisplayName="A_n (p=0.45)");
-semilogy(n_values, upper_bounds, 'r', DisplayName="Upper Bound (p=0.45)");
-semilogy(n_values, lower_bounds, 'g', DisplayName="Lower Bound (p=0.45)");
+plot(n_values, A_ns, 'b', DisplayName="A_n (p=0.45)");
+plot(n_values, upper_bounds, 'r', DisplayName="Upper Bound (p=0.45)");
+plot(n_values, lower_bounds, 'g', DisplayName="Lower Bound (p=0.45)");
 hold off;
 
 xlabel('n');
@@ -69,9 +69,9 @@ hold on;
 ax=gca;
 set(ax, 'YScale', 'log');
 
-semilogy(n_values, A_ns, 'black', DisplayName="A_n (p=0.1)");
-semilogy(n_values, upper_bounds, 'm', DisplayName="Upper Bound (p=0.1)");
-semilogy(n_values, lower_bounds, 'c', DisplayName="Lower Bound (p=0.1)");
+plot(n_values, A_ns, 'black', DisplayName="A_n (p=0.1)");
+plot(n_values, upper_bounds, 'm', DisplayName="Upper Bound (p=0.1)");
+plot(n_values, lower_bounds, 'c', DisplayName="Lower Bound (p=0.1)");
 hold off;
 
 xlabel('n');

@@ -2,7 +2,7 @@ clc; clear; close all;
 
 p = 0.1;
 n = 50;
-samples_per_power_of_ten = 10000;
+samples_per_power_of_ten = 1000;
 xstart = int64(0);
 xend = int64(12e14);
 EPSILON = 0.05;
@@ -41,15 +41,13 @@ for i = 0:log10(double(xend))
     start_val = int64(until);
 end
 
-time_elapsed = toc(start_time);
-disp(['Execution time: ', num2str(time_elapsed), ' s']);
 
 figure;
 ax = gca;
 set(ax, 'YScale', 'log', 'XScale', 'log');
 hold on;
 
-semilogx(x, arrayfun(@(i) efficient(i, cheatsheet), x), 'b', DisplayName='probabilities');
+plot(x, arrayfun(@(i) efficient(i, cheatsheet), x), 'b', DisplayName='probabilities');
 ylabel('Probability');
 xlabel('Block Index (Sorted)');
 title('Probability Distribution of Block Sequences');
@@ -61,3 +59,6 @@ yline(2^(-n*(H - EPSILON)), 'r', DisplayName='2^{-n(H-\epsilon)}');
 yline(2^(-n*(H + EPSILON)), 'c', DisplayName='2^{-n(H+\epsilon)}');
 hold off;
 legend();
+
+time_elapsed = toc(start_time);
+disp(['Execution time: ', num2str(time_elapsed), ' s']);

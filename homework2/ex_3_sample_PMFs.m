@@ -25,15 +25,14 @@ X_sequences_decimal = bi2de(X_reshaped, 'left-msb');
 Y_h_sequences_decimal = bi2de(Y_h_reshaped, 'left-msb');
 Y_sf_sequences_decimal = bi2de(Y_sf_reshaped, 'left-msb');
 
-% Count the occurrences of each possible sequence (0 to 1023)
 X_pmf_counts = histcounts(X_sequences_decimal, 0:1024);
-X_pmf = pmf_counts / sum(X_pmf_counts); % Normalize to get PMF
+X_pmf = X_pmf_counts / sum(X_pmf_counts);
 
 Y_h_pmf_counts = histcounts(Y_h_sequences_decimal, 0:1024);
-Y_h_pmf = Y_h_pmf_counts / sum(Y_h_pmf_counts); % Normalize to get PMF
+Y_h_pmf = Y_h_pmf_counts / sum(Y_h_pmf_counts);
 
 Y_sf_pmf_counts = histcounts(Y_sf_sequences_decimal, 0:1024);
-Y_sf_pmf = Y_sf_pmf_counts / sum(Y_sf_pmf_counts); % Normalize to get PMF
+Y_sf_pmf = Y_sf_pmf_counts / sum(Y_sf_pmf_counts);
 
 function res = H(p)
     res = -p * log2(p) - (1-p) * log2(1-p);
@@ -45,7 +44,7 @@ hold on;
 semilogy(0:1023, sort(Y_h_pmf), DisplayName="Huffman", LineWidth=1.5);
 semilogy(0:1023, sort(Y_sf_pmf), DisplayName="Shannon-Fano", LineWidth=1.5);
 legend();
-xlabel('10-bit sequence (decimal representation)');
+xlabel('10-bit sequence (decimal representation, sorted)');
 ylabel('Probability');
 title('PMF of 10-bit Sequences');
 grid on;
@@ -56,3 +55,11 @@ xlim([0 1023]);
 % typical_sequence_upper = 2^(-n*(H(p)-EPSILON));
 % yline(typical_sequence_lower,  HandleVisibility="off");
 % yline(typical_sequence_upper, HandleVisibility="off");
+
+a = X_pmf.*-log2(X_pmf);
+b = Y_h_pmf.*-log2(Y_h_pmf);
+c = Y_sf_pmf.*-log2(Y_sf_pmf);
+
+fprintf("Entropy of sample PMF of X: %f\n", sum(a(a>0))/n);
+fprintf("Entropy of sample PMF of Y (Huffman): %f\n", sum(b(b>0))/n);
+fprintf("Entropy of sample PMF of Y (Shannon-Fano): %f\n", sum(c(c>0))/n);

@@ -212,6 +212,6 @@ legend('Avg Stationary Length', 'Avg Conditional Length');
 xline(stationary_entropy, '--k', Label='Stationary Entropy', LabelOrientation='horizontal', HandleVisibility='off');
 xline(entropy_rate, '--r', Label='Entropy Rate', LabelOrientation='horizontal', HandleVisibility='off');
 title('Distribution of average code word length');
-xlabel('Average code word length');
+xlabel('Average code word length (in bits)');
 ylabel('Frequency');
 hold off;

@@ -104,23 +104,9 @@ for i = 1:num_of_experiments
     end
 end
 
-fprintf('d_5 counts:\n');
 keys_d5 = keys(d_5_counts);
-for i = 1:length(keys_d5)
-    fprintf('  %s: %d\n', keys_d5{i}, d_5_counts(keys_d5{i}));
-end
-
-fprintf('d_6 counts:\n');
 keys_d6 = keys(d_6_counts);
-for i = 1:length(keys_d6)
-    fprintf('  %s: %d\n', keys_d6{i}, d_6_counts(keys_d6{i}));
-end
-
-fprintf('Joint counts:\n');
 keys_joint = keys(joint_counts);
-for i = 1:length(keys_joint)
-    fprintf('  %s: %d\n', keys_joint{i}, joint_counts(keys_joint{i}));
-end
 
 
 % plot everything

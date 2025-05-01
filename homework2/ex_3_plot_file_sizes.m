@@ -14,7 +14,7 @@ end
 
 for n=1:10
 
-    SF_filename = sprintf('SF_compressed_data_5_%dBINEXP.bin', n);
+    SF_filename = sprintf('SF_compressed_data_5_%d.bin', n);
     H_filename = sprintf('H_compressed_data_5_%d.bin', n);
 
     upper_bound(n) = (H(p) + 1/n) * M;

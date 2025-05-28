@@ -1,0 +1,64 @@
+This is a comparison of the maximum a posteriori (MAP) and maximum likelihood (ML)
+estimation techniques.
+
+It is motivated by the observation that MAP and ML are basically equivalent in the
+case where the a priori belief is uniform.
+
+MAP should be better than ML in the general case (i.e. regardless of whether the a
+priori belief is uniform - but since when it is we have equality the "general case"
+here means "when the a priori is not uniform") since it has more data to work with.
+
+Consider for example a communication channel with the following behavior:
+    - When a 0 is entered, a 0 is output with probability 2/3
+    - When a 0 is entered, a 1 is output with probability 1/3
+    - When a 1 is entered, a 0 is output with probability 2/3
+    - When a 1 is entered, a 1 is output with probability 1/3
+This is known as a binary symmetric channel (BSC).
+
+The objective is to retrieve the input from the output.
+Upon observing a 1 in the output, we can say that the input was likely 1, since that
+is the input most likely to produce a 1. In other words, this maximizes the likelihood
+of a 1 in the output, and is thus the ML estimate. Mathematically, this is written as
+    X_est = argmax{P(Y=y|X=x)}.
+Note that no knowledge of the a priori distribution was needed in order to produce
+this estimate. Also note that without a prior distribution we cannot know the distribution
+of Y and thus cannot calculate P(X=x|Y=y) = P(X=x,Y=y)/P(Y=y) = P(X=x,Y=y) = P(X=x)P(Y=y|X=x).
+In a sense, this P(X|Y) is what most accurately describes what we want to maximize,
+i.e. find the most probable X given our observation of Y.
+
+
+There are however cases where this is not correct, and upon observing a 1 we can be
+better off believing a 0 was sent. For example, if the input is distributed like so:
+    X ~ (0.7, 0.3) (i.e. P(X=0)=0.3, P(X=1)=0.7),
+then a 1 in the output is more likely to occur due to a flipped 0 than a preserved 1:
+    P(X=0)P(Y=1|X=0) = 0.7*(1/3) = 7/30
+    P(X=1)P(Y=1|X=1) = 0.3*(2/3) = 6/30 
+Note that this is true for any prior distribution where P(X=0)P(Y=0|X=0) < P(X=1)P(Y=0|X=1)
+<=> P(X=0)/P(X=1) < P(Y=0|X=1)/P(Y=0|X=0) <=> P(X=0)/P(X=1) < P(error)/P(correct), and thus
+the difference between the probabilities can be made arbitrarily large (i suspect there
+is a bound here, not hard to find).
+
+If the true distribution of X is the above, then we can make more accurate guesses by
+using it. We wish to maximize
+    P(X=x|Y=y) = P(X=x,Y=y)/P(Y=y) = P(X=x,Y=y) = P(X=x)P(Y=y|X=x),
+which we can do because we know everything.
+This is the MAP estimation, since we now maximize the probability of X given the Y,
+i.e. a posteriori. (i speak latin btw)
+
+The confusing thing is that we know Y in both cases, thus our estimation is always a posteriori
+and that the extra information we have in the MAP case is the a priori distribution of X, which
+ultimately allows us to calculate the posterior. In ML, we do not have that so we just assume
+the worst case scenario, i.e. that X is uniform and thus its uncertainty is the most it can be.
+
+When X is uniformly distributed, P(X=x) is the same for every x, and thus does not influence
+which x maximizes P(X=x|Y=y), making MAP the same as ML.
+
+An interpretation of this whole thing is that when we know how X works, we can achieve better
+results, due to having that information. However when X is uniformly distributed, knowing how
+it works does not differ from assuming it is.
+
+We do not actually assume it is uniform in the ML case (look at the start of the example, not
+once is the prior distribution mentioned, let alone assumed to be something), we just ignore
+it. Turns out that ignoring it is the same as treating it as uniform, which is either a) a nice
+coincidence or b) some kind of evidence that not knowing is the same as maximum uncertainty
+and that the way we have defined things kinda sorta makes sense.

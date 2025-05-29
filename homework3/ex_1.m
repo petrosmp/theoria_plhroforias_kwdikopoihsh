@@ -14,16 +14,20 @@ for rate_idx = 1:length(rates)
               ', ', num2str(size(codewords,1)), ' (', num2str(num_codewords), ...
               ') codewords, ', num2str(length(unique(codewords, 'rows'))), ' distinct']);
 
-        for i = 1:num_of_experiments
+        n_r_bit_errors = 0;
+        parfor i = 1:num_of_experiments
+            experiment_bit_errors = 0;
             for j = 1:10
                 cw_idx = randi(size(codewords,1));
                 cw = codewords(cw_idx, :);
                 channeled = channel(cw, p);
                 decoded = ML_decode(channeled, codewords);
                 bit_errors = sum(cw ~= decoded);
-                bit_error_rates(rate_idx, n/unit) = bit_error_rates(rate_idx, n/unit) + bit_errors/(n*num_of_experiments*10);
+                experiment_bit_errors = experiment_bit_errors + bit_errors;
             end
+            n_r_bit_errors = n_r_bit_errors + experiment_bit_errors;
         end
+        bit_error_rates(rate_idx, n/unit) = bit_error_rates(rate_idx, n/unit) + n_r_bit_errors/(n*num_of_experiments*10);
     end
     disp(['bit error rates for rate ', num2str(rate), ': ',  mat2str(bit_error_rates(rate_idx, :))]);
 end
@@ -58,15 +62,9 @@ function output = channel(x, p)
 end
 
 function estimate = ML_decode(received, inputs)
-    min_dist = sum(received ~= inputs(1,:));
-    estimate = inputs(1,:);
-    for i = 2:size(inputs,1)
-        dist = sum(received ~= inputs(i,:));
-        if dist < min_dist
-            min_dist = dist;
-            estimate = inputs(i,:);
-        end
-    end
+    distances = sum(received ~= inputs, 2);
+    [~, min_idx] = min(distances);
+    estimate = inputs(min_idx, :);
 end
 
 

@@ -52,7 +52,12 @@ end
 
 function codewords = random_N_R_code(n, r)
     num_codewords = 2^floor(n*r);
-    codewords = randi([0,1], num_codewords, n);
+    if r == 1
+        codewords = dec2bin(0:2^n-1, n) - '0';
+        codewords = codewords(randperm(2^n), :);
+    else
+        codewords = randi([0,1], num_codewords, n);
+    end
 end
 
 function output = channel(x, p)

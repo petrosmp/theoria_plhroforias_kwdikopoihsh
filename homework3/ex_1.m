@@ -14,7 +14,7 @@ for rate_idx = 1:length(rates)
 
         n_r_bit_errors = 0;
         parfor i = 1:num_of_experiments            % can be replaced with parfor for faster execution
-            random_code = random_N_R_code_distinct(n, rate);
+            random_code = random_N_R_code(n, rate);
             experiment_bit_errors = 0;
             for j = 1:10
                 cw_idx = randi(size(random_code,1));

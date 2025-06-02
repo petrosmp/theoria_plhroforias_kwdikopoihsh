@@ -8,20 +8,19 @@ for rate_idx = 1:length(rates)
     unit = floor(1 / rate);
 
     for n = unit:unit:10*unit
-        codewords = random_N_R_code_distinct(n, rate);
         num_codewords = 2^floor(n*rate);
         disp(['rate ', num2str(rate), ', n ', num2str(n), ', unit ', num2str(unit), ...
-              ', ', num2str(size(codewords,1)), ' (', num2str(num_codewords), ...
-              ') codewords, ', num2str(length(unique(codewords, 'rows'))), ' distinct']);
+              ', (', num2str(num_codewords), ') codewords']);
 
         n_r_bit_errors = 0;
-        parfor i = 1:num_of_experiments
+        parfor i = 1:num_of_experiments            % can be replaced with parfor for faster execution
+            random_code = random_N_R_code_distinct(n, rate);
             experiment_bit_errors = 0;
             for j = 1:10
-                cw_idx = randi(size(codewords,1));
-                cw = codewords(cw_idx, :);
+                cw_idx = randi(size(random_code,1));
+                cw = random_code(cw_idx, :);
                 channeled = channel(cw, p);
-                decoded = ML_decode(channeled, codewords);
+                decoded = ML_decode(channeled, random_code);
                 bit_errors = sum(cw ~= decoded);
                 experiment_bit_errors = experiment_bit_errors + bit_errors;
             end

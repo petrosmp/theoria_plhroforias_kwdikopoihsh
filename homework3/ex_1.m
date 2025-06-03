@@ -1,6 +1,7 @@
 rates = [1, 1/2, 1/3, 1/4, 1/5, 1/8];
 p = 1/10;
 num_of_experiments = 100000;
+num_of_transmissions_per_code = 10;
 bit_error_rates = zeros(length(rates), 10);
 
 for rate_idx = 1:length(rates)
@@ -16,20 +17,18 @@ for rate_idx = 1:length(rates)
         parfor i = 1:num_of_experiments            % can be replaced with parfor for faster execution
             random_code = random_N_R_code(n, rate);
             experiment_bit_errors = 0;
-            for j = 1:10
-
+            for j = 1:num_of_transmissions_per_code
                 message = randi([0 1], k, 1);                           % generate random k-bit message
                 cw_idx = bit2int(message, k)+1;                         % make it decimal so it can be used as an index
                 cw = random_code(cw_idx, :);                            % get the codeword of that index (i.e. of that message)
                 channeled = channel(cw, p);                             % transmit it
                 msg_estimate = ML_decode(channeled, random_code, k);    % estimate the message based on the noisy codeword with ML 
-
                 bit_errors = sum(message ~= msg_estimate);
-                experiment_bit_errors = experiment_bit_errors + bit_errors;
+                experiment_bit_errors = experiment_bit_errors + bit_errors/n;
             end
-            n_r_bit_errors = n_r_bit_errors + experiment_bit_errors;
+            n_r_bit_errors = n_r_bit_errors + experiment_bit_errors/num_of_transmissions_per_code;
         end
-        bit_error_rates(rate_idx, n/unit) = bit_error_rates(rate_idx, n/unit) + n_r_bit_errors/(n*num_of_experiments*10);
+        bit_error_rates(rate_idx, n/unit) = bit_error_rates(rate_idx, n/unit) + n_r_bit_errors/(num_of_experiments);
     end
     disp(['bit error rates for rate ', num2str(rate), ': ',  mat2str(bit_error_rates(rate_idx, :))]);
 end
@@ -66,7 +65,7 @@ end
 function estimate = ML_decode(received, inputs, k)
     distances = sum(received ~= inputs, 2);
     [~, min_idx] = min(distances);
-    estimate = int2bit(min_idx+1, k); % make the estimated codeword index back
+    estimate = int2bit(min_idx+1, k);
 end
 
 
@@ -83,4 +82,3 @@ ylabel('Bit Error Rate');
 legend('show');
 grid on;
 hold off;
-
